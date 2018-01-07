@@ -38,6 +38,14 @@ function init() {
             var headY = this.cells[0].y;
 
             //assuming Snake is moving right
+            if(headY == food.x && headX == food.y){
+                food = getRandomFood();
+            }
+            else{
+                // pop last cell if food is eaten
+                this.cells.pop();
+            }
+
             if(this.direction == 'right'){
                 nextHeadX = headX + 1;
                 nextHeadY = headY;
@@ -56,7 +64,7 @@ function init() {
                 nextHeadX = headX;
                 nextHeadY = headY - 1;
             }
-            this.cells.pop();
+
             this.cells.unshift({x: nextHeadX, y: nextHeadY});
         }
     };
