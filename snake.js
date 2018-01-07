@@ -5,15 +5,15 @@
 // game loop --> Init, Draw, Update
 
 function init() {
-    
+    console.log("Init");
 }
 
 function draw() {
-    
+    console.log("draw");
 }
 
 function update() {
-
+    console.log("update");
 }
 
 function gameLoop() {
@@ -23,4 +23,7 @@ function gameLoop() {
 }
 
 init();
-gameLoop();
+// calling game loop after every 100ms
+setInterval(gameLoop,100);
+
+// gameLoop();
