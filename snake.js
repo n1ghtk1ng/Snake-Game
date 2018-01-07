@@ -10,7 +10,9 @@ function init() {
     pen = canvas.getContext('2d');
     W = canvas.width;
     H = canvas.height;
-    
+    gameOver = false;
+    score = 5;
+
     food = getRandomFood();
 
     snake = {
@@ -38,8 +40,9 @@ function init() {
             var headY = this.cells[0].y;
 
             //assuming Snake is moving right
-            if(headY == food.x && headX == food.y){
+            if(headX == food.x && headY == food.y){
                 food = getRandomFood();
+                score++;
             }
             else{
                 // pop last cell if food is eaten
@@ -66,6 +69,16 @@ function init() {
             }
 
             this.cells.unshift({x: nextHeadX, y: nextHeadY});
+
+            // find out the last coordinate (boundaries)
+
+            var last_x = Math.round(W/10);
+            var last_y = Math.round(H/10);
+
+            if(this.cells[0].y<0 || this.cells[0].x<0 || this.cells[0].y>last_y || this.cells[0].x > last_x) {
+                alert("gameOver");
+                gameOver = true;
+            }
         }
     };
     snake.createSnake();
@@ -101,10 +114,15 @@ function draw() {
 
     // let us draw the food
     pen.fillStyle = food.color;
-    pen.fillRect(food.x,food.y,10,10);
+    pen.fillRect(food.x*10,food.y*10,10,10);
 
+    pen.fillStyle = 'white';
+    pen.font = 'Georgia';
+    pen.fillText("Score: " + score,10,10);
 
     snake.drawSnake();
+
+
 }
 
 function update() {
@@ -114,17 +132,21 @@ function update() {
 function gameLoop() {
     draw();
     update();
+
+    if(gameOver == true){
+        clearInterval(ref);
+    }
 }
 
 function getRandomFood() {
-    var foodX = Math.round(Math.random()*(W-10)/10);
-    var foodY = Math.round(Math.random()*(H-10)/10);
+    var foodX = Math.round(Math.random(Math.random())*(W-10)/10);
+    var foodY = Math.round(Math.random(Math.random())*(H-10)/10);
 
     foodColors = ["red","green","aqua","coral", "orchid"];
-    var i = Math.round(Math.random()*foodColors.length);
+    var i = Math.round(Math.random()*(foodColors.length));
 
     var food = {
-        x: foodX,
+            x: foodX,
         y: foodY,
         color: foodColors[i]
     };
@@ -135,5 +157,5 @@ function getRandomFood() {
 
 init();
 // calling game loop after every 100ms
- setInterval(gameLoop,500); // gameLoop();
+var ref = setInterval(gameLoop,100); // gameLoop();
 
