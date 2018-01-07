@@ -10,6 +10,8 @@ function init() {
     pen = canvas.getContext('2d');
     W = canvas.width;
     H = canvas.height;
+    
+    food = getRandomFood();
 
     snake = {
         init_length: 5,
@@ -35,13 +37,50 @@ function init() {
             var headX = this.cells[0].x;
             var headY = this.cells[0].y;
 
-            //assuming Sanke is moving right
-            nextHeadX = headX + 1;
+            //assuming Snake is moving right
+            if(this.direction == 'right'){
+                nextHeadX = headX + 1;
+                nextHeadY = headY;
+
+            }
+            else if (this.direction == 'left'){
+                nextHeadX = headX - 1;
+                nextHeadY = headY;
+
+            }
+            else if (this.direction == 'down'){
+                nextHeadX = headX;
+                nextHeadY = headY + 1;
+            }
+            else {
+                nextHeadX = headX;
+                nextHeadY = headY - 1;
+            }
             this.cells.pop();
-            this.cells.unshift({x: nextHeadX, y: headY});
+            this.cells.unshift({x: nextHeadX, y: nextHeadY});
         }
     };
     snake.createSnake();
+
+    function KeyPressed(e) {
+        console.log("you pressed a key");
+        console.log(e);
+
+        if(e.key == 'ArrowRight') {
+            snake.direction = 'right';
+        }
+        else if(e.key == 'ArrowLeft') {
+            snake.direction = 'left';
+        }
+        else if(e.key == 'ArrowDown') {
+            snake.direction = 'down';
+        }
+        else{
+            snake.direction = 'up';
+        }
+    }
+
+    document.addEventListener('keydown',KeyPressed);
 
 
 
@@ -50,7 +89,11 @@ function init() {
 function draw() {
     // first erase the old screen
     pen.clearRect(0,0,W,H);
-    console.log(snake.cells);
+    //console.log(snake.cells);
+
+    // let us draw the food
+    pen.fillStyle = food.color;
+    pen.fillRect(food.x,food.y,10,10);
 
 
     snake.drawSnake();
@@ -63,11 +106,26 @@ function update() {
 function gameLoop() {
     draw();
     update();
+}
+
+function getRandomFood() {
+    var foodX = Math.round(Math.random()*(W-10)/10);
+    var foodY = Math.round(Math.random()*(H-10)/10);
+
+    foodColors = ["red","green","aqua","coral", "orchid"];
+    var i = Math.round(Math.random()*foodColors.length);
+
+    var food = {
+        x: foodX,
+        y: foodY,
+        color: foodColors[i]
+    };
+    return food;
+
 
 }
 
 init();
 // calling game loop after every 100ms
- setInterval(gameLoop,100);
+ setInterval(gameLoop,500); // gameLoop();
 
- // gameLoop();
